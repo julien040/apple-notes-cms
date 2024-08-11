@@ -1,47 +1,38 @@
-# Astro Starter Kit: Minimal
+# Apple notes as a CMS
 
-```sh
-npm create astro@latest -- --template minimal
-```
+This is a simple blog that uses Apple Notes as a CMS. It's a proof of concept that uses [Anyquery](https://anyquery.dev) to query the notes and display them as a blog.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/minimal)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/minimal)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/minimal/devcontainer.json)
+You can see a live example at [https://til.julienc.me](https://til.julienc.me).
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+![Example of the blog](example.png)
 
-## 🚀 Project Structure
+## What is anyquery?
 
-Inside of your Astro project, you'll see the following folders and files:
+Anyquery is a SQL query engine that runs on pretty much any data source. It allows you to query data from different sources like Apple Notes, Google Sheets, Notion, and more.
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+## How it works
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+The blog is an Astro project that uses SQL to query the notes. The notes are then stored as `notes.json` in the root of the project. The notes are then loaded by the Astro project and displayed as a blog.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+This is only on macOS as it uses Apple Notes.
 
-Any static assets, like images, can be placed in the `public/` directory.
+## Setup
 
-## 🧞 Commands
+1. Clone the repo
+2. Run `npm install` or `pnpm install`
+3. Install [Anyquery](https://anyquery.dev/docs/#installation)
+4. Install the Apple Notes plugin for Anyquery. Run `anyquery plugin install notes`
+5. Run `exportNotes.sh` to export the notes to `notes.json`
+6. Run `npm run build` or `pnpm run build` to build the project
 
-All commands are run from the root of the project, from a terminal:
+You can edit `src/config.js` to change the title of the blog and the footer text.
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+Running `./deploy.sh` will build the project and deploy it to Vercel.
 
-## 👀 Want to learn more?
+## License
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+The project is licensed under the MIT license. See the [LICENSE](LICENSE.md) file for more information.
+
+## Contributing
+
+Contributions are welcome! Feel free to open an issue or a pull request.
