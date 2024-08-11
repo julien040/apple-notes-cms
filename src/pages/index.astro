@@ -1,16 +1,52 @@
 ---
+// Import all the notes from the JSON export
+import notes from "../../notes.json";
+import "../styles.css";
+import Main from "../layout/main.astro";
+import config from "../config";
+import { slugify } from "../functions/helper";
+import jsdom from "jsdom";
+const { JSDOM } = jsdom;
 
+function shaveText(text: string, maxLength: number) {
+    if (text.length > maxLength) {
+        return text.slice(0, maxLength - 3) + "...";
+    }
+    return text;
+}
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Main title="TIL - JulienC" description="Today I Learned by JulienC">
+    <h1 class="text-[40px] font-bold">{config.header.title}</h1>
+    <p class="text-[#767676] tracking-tight text-lg leading-tight">
+        {config.header.description}
+    </p>
+    <main class="flex flex-col gap-4 mt-8">
+        {
+            notes.map((note) => {
+                // Get the HTML content of the note
+                const dom = new JSDOM(note.html_body);
+                const fullText = dom.window.document.body.textContent;
+                // Get the text content of the note
+                const text = shaveText(fullText, 80);
+
+                return (
+                    <a
+                        class="bg-white rounded-lg p-4 w-full flex flex-col"
+                        href={`/${slugify(note.name)}`}
+                    >
+                        <h2 class=" text-lg font-semibold">{note.name}</h2>
+                        <div class="flex flex-row mt-1 gap-4">
+                            <p class="text-[#5B5B5B] font-medium">
+                                {new Date(
+                                    note.modification_date
+                                ).toLocaleDateString("en-CA")}
+                            </p>
+                            <p class="text-[#595959] text-[0.7rem]">{text}</p>
+                        </div>
+                    </a>
+                );
+            })
+        }
+    </main>
+</Main>

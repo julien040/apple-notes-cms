@@ -1,0 +1,45 @@
+---
+const { title, description } = Astro.props;
+import config from "../config";
+---
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <style>
+            html {
+                background: #f5f5f7;
+            }
+        </style>
+    </head>
+    <body class="max-w-xl mx-auto min-h-screen flex flex-col py-14">
+        <slot />
+        <footer class="py-3 mt-auto">
+            <div class="flex flex-row w-full justify-center gap-4 items-center">
+                {
+                    config.footer.map((link) => (
+                        <a
+                            class="text-[#de9807] text-sm underline"
+                            href={link.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            {link.text}
+                        </a>
+                    ))
+                }
+            </div>
+            <p class="text-center text-black/40 mt-2 text-sm">
+                This website uses Apple Notes as a CMS. Read more about it <a
+                    class="text-black/40 underline"
+                    href="https://julienc.me/">here</a
+                >.
+            </p>
+        </footer>
+    </body>
+</html>

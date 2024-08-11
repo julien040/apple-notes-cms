@@ -1,0 +1,258 @@
+---
+import notes from "../../notes.json";
+import { slugify } from "../functions/helper";
+import Main from "../layout/main.astro";
+import config from "../config";
+import jsdom from "jsdom";
+const { JSDOM } = jsdom;
+export function getStaticPaths() {
+    return notes.map((note) => {
+        return {
+            params: {
+                blog: slugify(note.name),
+            },
+        };
+    });
+}
+
+const { blog } = Astro.params;
+const note = notes.find((note) => slugify(note.name) === blog);
+// For each html tag, if the text content is a link, replace it with an actual link (a href)
+const dom = new JSDOM(note.html_body);
+const links = dom.window.document.querySelectorAll("div");
+links.forEach((link) => {
+    if (link.textContent.includes("http")) {
+        link.innerHTML = `<a href="${link.textContent}">${link.textContent}</a>`;
+    }
+});
+---
+
+<Main title={note.name} description={`Today I Learned ${note.name}`}>
+    <style is:global>
+        article.notes {
+            color: #454545;
+            font-size: 0.9rem;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            letter-spacing: -0.015rem;
+        }
+
+        article.notes > div:first-child > h1 {
+            color: #de9807;
+            margin-bottom: 0.5rem;
+        }
+
+        article.notes h1 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: normal;
+        }
+        article.notes h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            line-height: normal;
+            margin-bottom: 4px;
+        }
+        article.notes h3 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            line-height: normal;
+        }
+        article.notes p,
+        a,
+        li,
+        ul,
+        ol,
+        blockquote,
+        span {
+            font-size: 0.875rem;
+            letter-spacing: -0.01rem;
+        }
+
+        article.notes div:has(> tt) {
+            background-color: #eaeaea;
+            padding: 0.1rem 0.5rem;
+            font-size: 0.75rem;
+        }
+        /* Code formatting */
+        :is(div:has(> tt)):has(+ div) {
+            margin-top: 0.5rem;
+            padding: 0.1rem 0.5rem;
+            padding-top: 0.6rem !important;
+            border-top-left-radius: 0.5rem;
+            border-top-right-radius: 0.5rem;
+        }
+        :is(div:has(> tt)):not(:has(+ div)) {
+            margin-bottom: 0.5rem;
+            padding: 0.1rem 0.5rem;
+            padding-bottom: 0.6rem !important;
+            border-bottom-left-radius: 0.5rem;
+            border-bottom-right-radius: 0.5rem;
+        }
+
+        /* list */
+
+        article.notes ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+        }
+
+        article.notes ul.Apple-dash-list {
+            list-style-type: "-  ";
+            padding-left: 1.3rem;
+        }
+
+        article.notes ol {
+            list-style-type: decimal;
+            padding-left: 1.5rem;
+        }
+
+        /* Links */
+        article.notes a {
+            color: #de9807;
+            text-decoration: underline;
+        }
+    </style>
+    <main class="">
+        <div class="flex flex-row justify-between">
+            <div class="flex gap-2">
+                <button
+                    onclick="history.back()"
+                    class="block p-2 rounded-md bg-[#eaebeb]"
+                >
+                    <svg
+                        version="1.1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        viewBox="0 0 30 30"
+                        class="w-3 h-3"
+                    >
+                        <g>
+                            <rect
+                                height="30.5332"
+                                opacity="0"
+                                width="22.043"
+                                x="0"
+                                y="0"></rect>
+                            <path
+                                d="M0 15.2578C0 15.6973 0.158203 16.084 0.492188 16.418L14.4316 30.041C14.7305 30.3574 15.1172 30.5156 15.5742 30.5156C16.4883 30.5156 17.1914 29.8301 17.1914 28.916C17.1914 28.459 16.998 28.0723 16.7168 27.7734L3.91992 15.2578L16.7168 2.74219C16.998 2.44336 17.1914 2.03906 17.1914 1.59961C17.1914 0.685547 16.4883 0 15.5742 0C15.1172 0 14.7305 0.158203 14.4316 0.457031L0.492188 14.0977C0.158203 14.4141 0 14.8184 0 15.2578Z"
+                                fill="#000000"
+                                fill-opacity="0.85"></path>
+                        </g>
+                    </svg>
+                </button>
+                <a
+                    href="/"
+                    class="flex items-center p-2 rounded-md bg-[#eaebeb]"
+                >
+                    <svg
+                        version="1.1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        viewBox="0 0 35.8066 25.7168"
+                        class="w-4 h-4"
+                    >
+                        <g>
+                            <rect
+                                height="25.7168"
+                                opacity="0"
+                                width="35.8066"
+                                x="0"
+                                y="0"></rect>
+                            <path
+                                d="M9.98438 24.9082L33.9961 24.9082C34.7871 24.9082 35.4199 24.293 35.4199 23.502C35.4199 22.6934 34.7871 22.0781 33.9961 22.0781L9.98438 22.0781C9.17578 22.0781 8.56055 22.6934 8.56055 23.502C8.56055 24.293 9.17578 24.9082 9.98438 24.9082Z"
+                                fill="#000000"
+                                fill-opacity="0.85"></path>
+                            <path
+                                d="M2.21484 25.7168C3.44531 25.7168 4.42969 24.7148 4.42969 23.502C4.42969 22.2715 3.44531 21.2871 2.21484 21.2871C0.984375 21.2871 0 22.2715 0 23.502C0 24.7148 0.984375 25.7168 2.21484 25.7168Z"
+                                fill="#000000"
+                                fill-opacity="0.85"></path>
+                            <path
+                                d="M9.98438 14.291L33.9961 14.291C34.7871 14.291 35.4199 13.6582 35.4199 12.8672C35.4199 12.0762 34.7871 11.4609 33.9961 11.4609L9.98438 11.4609C9.17578 11.4609 8.56055 12.0762 8.56055 12.8672C8.56055 13.6582 9.17578 14.291 9.98438 14.291Z"
+                                fill="#000000"
+                                fill-opacity="0.85"></path>
+                            <path
+                                d="M2.21484 15.082C3.44531 15.082 4.42969 14.0977 4.42969 12.8672C4.42969 11.6367 3.44531 10.6523 2.21484 10.6523C0.984375 10.6523 0 11.6367 0 12.8672C0 14.0977 0.984375 15.082 2.21484 15.082Z"
+                                fill="#000000"
+                                fill-opacity="0.85"></path>
+                            <path
+                                d="M9.98438 3.65625L33.9961 3.65625C34.7871 3.65625 35.4199 3.04102 35.4199 2.25C35.4199 1.44141 34.7871 0.826172 33.9961 0.826172L9.98438 0.826172C9.17578 0.826172 8.56055 1.44141 8.56055 2.25C8.56055 3.04102 9.17578 3.65625 9.98438 3.65625Z"
+                                fill="#000000"
+                                fill-opacity="0.85"></path>
+                            <path
+                                d="M2.21484 4.44727C3.44531 4.44727 4.42969 3.46289 4.42969 2.25C4.42969 1.01953 3.44531 0.0351562 2.21484 0.0351562C0.984375 0.0351562 0 1.01953 0 2.25C0 3.46289 0.984375 4.44727 2.21484 4.44727Z"
+                                fill="#000000"
+                                fill-opacity="0.85"></path>
+                        </g>
+                    </svg>
+                </a>
+            </div>
+            <div class="flex gap-2">
+                <a
+                    class="flex items-center p-2 rounded-md bg-[#eaebeb]"
+                    href={config.star_link}
+                >
+                    <svg
+                        version="1.1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        viewBox="0 0 39.4311 39.8145"
+                        class="w-4 h-4"
+                    >
+                        <g>
+                            <rect
+                                height="39.8145"
+                                opacity="0"
+                                width="39.4311"
+                                x="0"
+                                y="0"></rect>
+                            <path
+                                d="M7.48997 36.9844C8.21067 37.5469 9.12474 37.3535 10.2146 36.5625L19.5134 29.7246L28.8298 36.5625C29.9197 37.3535 30.8161 37.5469 31.5544 36.9844C32.2751 36.4395 32.4333 35.543 31.9939 34.2598L28.32 23.3262L37.7068 16.5762C38.7966 15.8027 39.2361 14.9941 38.9548 14.1152C38.6736 13.2715 37.8474 12.8496 36.4939 12.8672L24.9802 12.9375L21.4822 1.95117C21.0603 0.650391 20.4275 0 19.5134 0C18.6169 0 17.9841 0.650391 17.5622 1.95117L14.0642 12.9375L2.55052 12.8672C1.197 12.8496 0.37083 13.2715 0.0895802 14.1152C-0.209248 14.9941 0.247783 15.8027 1.33763 16.5762L10.7243 23.3262L7.05052 34.2598C6.61106 35.543 6.76927 36.4395 7.48997 36.9844ZM10.0212 33.5039C9.98606 33.4688 10.0036 33.4512 10.0212 33.3457L13.5193 23.291C13.7654 22.6055 13.6247 22.0605 13.0095 21.6387L4.2556 15.5918C4.16771 15.5391 4.15013 15.5039 4.16771 15.4512C4.18528 15.3984 4.22044 15.3984 4.32591 15.3984L14.9607 15.5918C15.6814 15.6094 16.1384 15.3105 16.3669 14.5898L19.4255 4.41211C19.4431 4.30664 19.4783 4.27148 19.5134 4.27148C19.5661 4.27148 19.6013 4.30664 19.6189 4.41211L22.6775 14.5898C22.906 15.3105 23.363 15.6094 24.0837 15.5918L34.7185 15.3984C34.824 15.3984 34.8591 15.3984 34.8767 15.4512C34.8943 15.5039 34.8591 15.5391 34.7888 15.5918L26.0349 21.6387C25.4197 22.0605 25.279 22.6055 25.5251 23.291L29.0232 33.3457C29.0408 33.4512 29.0583 33.4688 29.0232 33.5039C28.988 33.5566 28.9353 33.5215 28.865 33.4688L20.4099 27.0176C19.8474 26.5781 19.197 26.5781 18.6345 27.0176L10.1794 33.4688C10.1091 33.5215 10.0564 33.5566 10.0212 33.5039Z"
+                                fill="#000000"
+                                fill-opacity="0.85"></path>
+                        </g>
+                    </svg>
+                </a>
+                <button
+                    class="block p-2 rounded-md bg-[#eaebeb]"
+                    onclick="navigator.share({title: document.title, text: document.title, url: window.location.href})"
+                >
+                    <svg
+                        version="1.1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        viewBox="0 0 31.5879 47.6543"
+                        class="w-5 h-5"
+                    >
+                        <g>
+                            <rect
+                                height="47.6543"
+                                opacity="0"
+                                width="31.5879"
+                                x="0"
+                                y="0"></rect>
+                            <path
+                                d="M31.2012 19.3711L31.2012 36.9141C31.2012 40.5352 29.3555 42.3633 25.6816 42.3633L5.51953 42.3633C1.8457 42.3633 0 40.5352 0 36.9141L0 19.3711C0 15.75 1.8457 13.9219 5.51953 13.9219L10.8105 13.9219L10.8105 16.752L5.55469 16.752C3.79688 16.752 2.83008 17.7012 2.83008 19.5293L2.83008 36.7559C2.83008 38.584 3.79688 39.5332 5.55469 39.5332L25.6289 39.5332C27.3691 39.5332 28.3711 38.584 28.3711 36.7559L28.3711 19.5293C28.3711 17.7012 27.3691 16.752 25.6289 16.752L20.3906 16.752L20.3906 13.9219L25.6816 13.9219C29.3555 13.9219 31.2012 15.75 31.2012 19.3711Z"
+                                fill="#000000"
+                                fill-opacity="0.85"></path>
+                            <path
+                                d="M15.5918 28.5996C16.3477 28.5996 16.998 27.9668 16.998 27.2285L16.998 9.17578L16.8926 6.53906L18.0703 7.78711L20.7422 10.6348C20.9883 10.916 21.3398 11.0566 21.6914 11.0566C22.4121 11.0566 22.9746 10.5293 22.9746 9.80859C22.9746 9.43945 22.8164 9.1582 22.5527 8.89453L16.6113 3.16406C16.2598 2.8125 15.9609 2.68945 15.5918 2.68945C15.2402 2.68945 14.9414 2.8125 14.5723 3.16406L8.63086 8.89453C8.36719 9.1582 8.22656 9.43945 8.22656 9.80859C8.22656 10.5293 8.75391 11.0566 9.49219 11.0566C9.82617 11.0566 10.2129 10.916 10.459 10.6348L13.1133 7.78711L14.3086 6.53906L14.2031 9.17578L14.2031 27.2285C14.2031 27.9668 14.8359 28.5996 15.5918 28.5996Z"
+                                fill="#000000"
+                                fill-opacity="0.85"></path>
+                        </g>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <p class="text-black/30 text-xs text-center">
+            Modified {
+                new Date(note.modification_date).toLocaleDateString("en-CA")
+            }
+        </p>
+        <article
+            class="notes mt-4 p-6 bg-white rounded-lg"
+            set:html={dom.serialize()}
+        />
+    </main>
+</Main>
